@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+    }
         stages {
             stage ('Build'){
                 steps {
@@ -28,18 +31,15 @@ pipeline {
                 }
             }
 
-            stage ('Build_Docker'){
+            stage ('Build_And_PushDocker'){
                 agent{label 'docker_agent'}
                 steps {
-                withCredentials([string(credentialsId: 'DOCKERHUB_UNAME', variable: 'dockerhub_uname'),
-                                    string(credentialsId: 'DOCKERHUB_PASSWD', variable: 'dockerhub_passwd')]) {
                     sh '''#!/bin/bash
-                    sudo curl https://raw.githubusercontent.com/mmajor124/kuralabs_deployment_5/main/dockerfile > dockerfile
-                    sudo docker login --username=${dockerhub_uname} --password=${dockerhub_passwd}
-                    sudo docker build -t mmajor124/url_shortener:latest .
-                    sudo docker push mmajor124/url_shortener:latest
+                    sudo docker build -t mmajor124/urlapp:latest .
+                    echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
+                    sudo docker push mmajor124/urlapp:latest
+                    docker logout 
                     '''
-                    }
                 }
             }
         
