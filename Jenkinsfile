@@ -34,10 +34,10 @@ pipeline {
                 withCredentials([string(credentialsId: 'DOCKERHUB_UNAME', variable: 'dockerhub_uname'),
                                     string(credentialsId: 'DOCKERHUB_PASSWD', variable: 'dockerhub_passwd')]) {
                     sh '''#!/bin/bash
-                    sudo curl https://raw.githubusercontent.com/KingmanT/Flask_Application-Containerized_Deployment/main/dockerfile > dockerfile
+                    sudo curl https://raw.githubusercontent.com/mmajor124/kuralabs_deployment_5/main/dockerfile > dockerfile
                     sudo docker login --username=${dockerhub_uname} --password=${dockerhub_passwd}
-                    sudo docker build -t kingmant/url_shortener:latest .
-                    sudo docker push kingmant/url_shortener:latest
+                    sudo docker build -t mmajor124/url_shortener:latest .
+                    sudo docker push mmajor124/url_shortener:latest
                     '''
                     }
                 }
